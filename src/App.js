@@ -1,11 +1,17 @@
-import { Route, Switch } from "react-router-dom/cjs/react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom/cjs/react-router-dom";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
+import Layout from "./layout/Layout";
+import { useSelector } from "react-redux";
+import SendMail from "./pages/SendMail";
 
 function App() {
+  const isAuth = useSelector(state=>state.auth.isAuthenticated)
+
   return (
-    <Switch>
+    <Layout>
+      <Switch>
       <Route path='/' exact>
         <Signup/>
       </Route>
@@ -13,9 +19,15 @@ function App() {
         <Login/>
       </Route>
       <Route path='/welcome'>
-        <Welcome/>
+        {isAuth && <Welcome/>}
+        {!isAuth && <Redirect to='/'/>}
       </Route>
-    </Switch>
+      <Route path='/send'>
+        {isAuth && <SendMail/>}
+        {!isAuth && <Redirect to='/'/>}
+      </Route>
+      </Switch>
+    </Layout>
   );
 }
 

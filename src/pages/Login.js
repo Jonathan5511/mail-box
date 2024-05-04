@@ -1,8 +1,11 @@
 import { useRef } from "react";
 import { Container,Card,Form,Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom/cjs/react-router-dom";
+import { authActions } from "../store/auth";
 
 const Login = props =>{
+    const dispatch = useDispatch()
     const emailInputRef = useRef()
     const passwordInputRef = useRef()
     const history = useHistory()
@@ -35,6 +38,8 @@ const Login = props =>{
                 })
             }
         }).then(data=>{
+            console.log(data.email)
+            dispatch(authActions.login(data.idToken))
             history.replace('/welcome')
         }).catch(err=>{
             alert(err.message)
@@ -42,7 +47,7 @@ const Login = props =>{
     }
 
     return (
-            <Container style={{margin:'10rem', marginLeft:'25rem'}}>
+            <Container style={{margin:'10rem', marginLeft:'27rem', marginTop:'5rem'}}>
             <Card className="p-3 bg-dark text-light " style={{ borderRadius:'0.5rem',width: '30rem' }}>
                 <Form onSubmit={onSubmitHandler}>
                     <Form.Group className="mb-3 " controlId="formGroupEmail">
@@ -54,11 +59,11 @@ const Login = props =>{
                         <Form.Control type="password" placeholder="Password" ref={passwordInputRef}/>
                     </Form.Group>
                     <div style={{textAlign:"center"}} className="mb-3"> 
-                        <Button variant="primary" type="submit">SignIn</Button>
+                        <Button variant="primary" type="submit">Login</Button>
                     </div>
                 </Form>
                 <div style={{textAlign:"center"}}>
-                    <NavLink to='/'>Have an account?</NavLink>
+                    <NavLink to='/'>Don't have an account?</NavLink>
                 </div>
             </Card>
         </Container>
