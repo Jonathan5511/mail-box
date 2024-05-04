@@ -1,17 +1,18 @@
 import { useRef } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
+import { NavLink, useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const Signup = props =>{
     const emailInputRef = useRef()
     const passwordInputRef = useRef()
     const cpasswordInputRef = useRef()
+    const history = useHistory()
 
     const onSubmitHandler=event=>{
         event.preventDefault()
         const enteredEmail = emailInputRef.current.value
         const enteredPassword = passwordInputRef.current.value
         const enteredCpassword =cpasswordInputRef.current.value
-        console.log(enteredEmail)
         if(enteredEmail.trim().length === 0 || enteredPassword.trim().length===0){
             alert('Please enter all detials!!')
             return;
@@ -39,6 +40,7 @@ const Signup = props =>{
                 }
             }).then(data=>{
                 console.log('Signed In')
+                history.replace('/welcome')
             }).catch(err=>{
                 alert(err.message)
             })
@@ -67,8 +69,13 @@ const Signup = props =>{
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control type="password" placeholder="Confirm Password" ref={cpasswordInputRef}/>
                     </Form.Group>
-                    <Button variant="primary" type="submit">Submit</Button>
+                    <div style={{textAlign:"center"}} className="mb-3">
+                        <Button stylevariant="primary" type="submit">Submit</Button>
+                    </div>
                 </Form>
+                <div style={{textAlign:"center"}}>
+                    <NavLink to='/login'>Don't have an account?</NavLink>
+                </div>
             </Card>
         </Container>
         
