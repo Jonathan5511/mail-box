@@ -1,12 +1,43 @@
-import { Fragment, useEffect, useState } from "react";
-import { Button, Col, Row,Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Fragment, useEffect, useState} from "react";
+import { Button, Col, ListGroup, Row,Table,Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import classes from './Inbox.module.css'
+import { mailActions } from "../store/mail";
 
 
 const Inbox = ()=>{
     const [inboxMail,setInboxMail] = useState([])
+    const [viewMail,setViewMail]= useState([])
     const currMail = useSelector(state=>state.auth.mailId)
+    const dispatch = useDispatch()
+    const mailRead = useSelector(state=>state.mail.isRead)
+    
+
+    const onReadHandler=(id, to, from, subject, message, read, check)=>{
+        console.log(id)
+        console.log(inboxMail.id)
+        dispatch(mailActions.read())
+        const openMail = inboxMail.filter((item)=>item.id===id)
+        setViewMail(openMail)
+        fetch(`https://mail-react-c7e1b-default-rtdb.firebaseio.com/mail/${id}.json`,{
+            method:'PUT',
+            body:JSON.stringify({
+                id:id,
+                to:to,
+                from:from,
+                subject:subject,
+                content:message,
+                read:read,
+                check:true
+            }),
+            headers:{'Content-Type':'application/json'}
+        })
+    }
+
+    const onCloseReadHandler=()=>{
+        dispatch(mailActions.unRead())
+    }
+
     useEffect(()=>{
         fetch('https://mail-react-c7e1b-default-rtdb.firebaseio.com/mail.json'
         ).then(res=>{
@@ -30,7 +61,9 @@ const Inbox = ()=>{
                         to:data[key].to,
                         from:data[key].from,
                         subject:data[key].subject,
-                        message:data[key].content
+                        message:data[key].content,
+                        read:data[key].read,
+                        check:data[key].check
                     })
                 }
                
@@ -43,11 +76,12 @@ const Inbox = ()=>{
         
     },[currMail])
 
+    
+
     return(
         <Fragment>
             <br/>
-            <div className="col d-flex justify-content-center">
-                
+            {!mailRead && <div className="col d-flex justify-content-center">
                     <Row>
                         <Col>
                         <div className={classes.control}>
@@ -58,15 +92,18 @@ const Inbox = ()=>{
                                         <th>From</th>
                                         <th>Subject</th>
                                         <th>Message</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
                                     {inboxMail.map((item)=>{
-                                        return(<tr key={item.id}>
+                                        return(<tr  key={item.id}>
+                                        
                                             <td>{item.from}</td>
                                             <td>{item.subject}</td>
                                             <td>{item.message}</td>
-        
+                                            <td><Button size="sm" variant="dark" onClick={()=>onReadHandler(item.id,item.to,item.from,item.subject,item.message,item.read,item.check)}>Open Mail</Button></td>
                                         </tr>)
                                     })}
                                     
@@ -76,8 +113,26 @@ const Inbox = ()=>{
                             </div>
                         </Col>
                 </Row>
-            </div>    
-                   
+            </div>  }  
+                   { mailRead && <div className={classes.control}>
+                    <Card >
+                        <ListGroup>
+                            {viewMail.map(item=>{
+                                return(<div><ListGroup.Item key={item.key}>
+                                    From: {item.from} 
+                                </ListGroup.Item>
+                                <ListGroup.Item key={item.key}>
+                                     Subject: {item.subject} 
+                                </ListGroup.Item>
+                                <ListGroup.Item key={item.key}>
+                                    Message: {item.message}
+                                </ListGroup.Item>
+                                <Button className="m-3 " onClick={onCloseReadHandler}>Back</Button></div>)
+                                
+                            })}
+                        </ListGroup>
+                   </Card>
+                    </div>}
             
         </Fragment>
     )

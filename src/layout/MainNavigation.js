@@ -15,7 +15,7 @@ const MainNavigation = ()=>{
     return(
         <Fragment>
      
-            <Navbar className="d-flex justify-content-end navbar-dark align-items-center bg-success " > 
+            <Navbar className="d-flex justify-content-end navbar-dark align-items-center bg-dark " > 
             <Container>
                 <NavbarBrand style={{fontSize:'35px',fontWeight:'bold'}}>MailBox</NavbarBrand>
                 

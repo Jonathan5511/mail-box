@@ -29,7 +29,9 @@ const SendMail = ()=>{
             from:enteredFromEmail,
             to:enteredToEmail,
             subject:enteredSubjectEmail,
-            content:editorContent
+            content:editorContent,
+            read:false,
+            check:false
         }
         fetch('https://mail-react-c7e1b-default-rtdb.firebaseio.com/mail.json',{
             method:'POST',
