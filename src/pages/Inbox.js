@@ -75,7 +75,7 @@ const Inbox = ()=>{
                             <Button href='/welcome' >Back</Button>
                             </div>
                         </Col>
-                    </Row>
+                </Row>
             </div>    
                    
             
