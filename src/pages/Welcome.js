@@ -36,6 +36,7 @@ const Welcome=props=>{
             <Card className="p-3 bg-dark text-light " style={{ borderRadius:'0.5rem',width: '30rem' }}>
                 <h3 className="text-center mb-3">Welcome to Mailbox!!</h3>
                 <Button href="/inbox" className="mb-3">Inbox ({count})</Button>
+                <Button href="/sent" className="mb-3">Sent</Button>
                 <Button href="/send" className="mb-3">Send Mail</Button>
             </Card>
         </Container>

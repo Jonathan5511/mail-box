@@ -6,6 +6,7 @@ import Layout from "./layout/Layout";
 import { useSelector } from "react-redux";
 import SendMail from "./pages/SendMail";
 import Inbox from "./pages/Inbox";
+import Sent from "./pages/Sent";
 
 function App() {
   const isAuth = useSelector(state=>state.auth.isAuthenticated)
@@ -29,6 +30,10 @@ function App() {
       </Route>
       <Route path='/inbox'>
         {isAuth && <Inbox/>}
+        {!isAuth && <Redirect to='/'/>}
+      </Route>
+      <Route path='/sent'>
+        {isAuth && <Sent/>}
         {!isAuth && <Redirect to='/'/>}
       </Route>
       </Switch>
