@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState} from "react";
+import { Fragment, useCallback, useEffect, useState} from "react";
 import { Button, Col, ListGroup, Row,Table,Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import classes from './Inbox.module.css'
@@ -8,6 +8,7 @@ import { mailActions } from "../store/mail";
 const Inbox = ()=>{
     const [inboxMail,setInboxMail] = useState([])
     const [viewMail,setViewMail]= useState([])
+    const [deleteChange,setDeleteChange] = useState(false)
     const currMail = useSelector(state=>state.auth.mailId)
     const dispatch = useDispatch()
     const mailRead = useSelector(state=>state.mail.isRead)
@@ -37,6 +38,15 @@ const Inbox = ()=>{
     const onCloseReadHandler=()=>{
         dispatch(mailActions.unRead())
     }
+
+    const onDeleteHandler=useCallback(async(id)=>{
+        setDeleteChange(true)
+        await fetch(`https://mail-react-c7e1b-default-rtdb.firebaseio.com/mail/${id}.json`,{
+            method:'DELETE',
+            headers:{'Content-Type':'application/json'}
+        })
+        setDeleteChange(false)
+    },[])
 
     useEffect(()=>{
         fetch('https://mail-react-c7e1b-default-rtdb.firebaseio.com/mail.json'
@@ -74,7 +84,7 @@ const Inbox = ()=>{
             alert(err.message)
         })
         
-    },[currMail])
+    },[currMail,onDeleteHandler,deleteChange])
 
     
 
@@ -93,6 +103,7 @@ const Inbox = ()=>{
                                         <th>Subject</th>
                                         <th>Message</th>
                                         <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,6 +115,7 @@ const Inbox = ()=>{
                                             <td>{item.subject}</td>
                                             <td>{item.message}</td>
                                             <td><Button size="sm" variant="dark" onClick={()=>onReadHandler(item.id,item.to,item.from,item.subject,item.message,item.read,item.check)}>Open Mail</Button></td>
+                                            <td><Button size="sm" variant="dark" onClick={()=>onDeleteHandler(item.id)}>Delete</Button></td>
                                         </tr>)
                                     })}
                                     
