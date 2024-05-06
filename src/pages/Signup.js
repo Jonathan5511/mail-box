@@ -43,6 +43,7 @@ const Signup = props =>{
                 }
             }).then(data=>{
                 dispatch(authActions.login(data.idToken))
+                dispatch(authActions.userMailId(data.email))
                 history.replace('/welcome')
             }).catch(err=>{
                 alert(err.message)

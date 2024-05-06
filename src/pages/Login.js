@@ -40,6 +40,7 @@ const Login = props =>{
         }).then(data=>{
             console.log(data.email)
             dispatch(authActions.login(data.idToken))
+            dispatch(authActions.userMailId(data.email))
             history.replace('/welcome')
         }).catch(err=>{
             alert(err.message)

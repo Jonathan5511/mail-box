@@ -52,7 +52,7 @@ const SendMail = ()=>{
             fromInputRef.current.value=''
             toInputRef.current.value=''
             subjectInputRef.current.value=''
-            editorContent=EditorState.createEmpty()
+            
         }).catch(err=>{
             alert(err.message)
         })

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const authInitialState={
     isAuthenticated:!!localStorage.getItem('token'),
     token:localStorage.getItem('token'),
+    mailId:localStorage.getItem('mail')
     
 }
 
@@ -21,7 +22,12 @@ const authSlice=createSlice({
             state.isAuthenticated=!!action.payload
             localStorage.removeItem('token')
             state.token=action.payload
+            localStorage.removeItem('mail')
            
+        },
+        userMailId(state,action){
+            state.mailId=action.payload
+            localStorage.setItem('mail',action.payload)
         }
     }
 })
